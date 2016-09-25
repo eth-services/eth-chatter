@@ -79,7 +79,6 @@ checkContractEvents = (address, cb) ->
 
 service = new somata.Service 'eth-chatter:events', {
     checkContractEvents
-    subscribeContract
     subscribeRoom
     findRoomEvents
 }
