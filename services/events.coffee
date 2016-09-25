@@ -62,7 +62,6 @@ findRoomEvents = (room, cb) ->
                 processEvent r
 
             data = data.filter (d) -> d.room == room
-            console.log data
             cb err, data
 
 checkContractEvents = (address, cb) ->
