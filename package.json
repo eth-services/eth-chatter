@@ -1,0 +1,26 @@
+{
+    "name": "eth-chatter",
+    "version": "0.0.1",
+    "homepage": "http://eth-chatter.io",
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/brynwaldwick/eth-chatter.git"
+    },
+    "author": {
+        "name": "Prontotype",
+        "url": "http://prontotype.us/"
+    },
+    "keywords": [
+        "ethereum",
+        "service",
+        "dapp"
+    ],
+    "dependencies": {
+        "kefir-collection": "0.1.x",
+        "kefir-fetch": "0.1.x",
+		"qs": "*",
+		"redis": "0.2.x",
+		"somata": "0.1.x",
+		"somata-socketio": "0.0.8"
+    }
+}
