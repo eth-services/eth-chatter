@@ -32,6 +32,10 @@ stringToColor = (str) ->
 stringToColor = (str) ->
     return (parseInt(parseInt(str).toExponential().slice(2,-5), 10) & 0xFFFFFF).toString(16).toUpperCase()
 
+addressToColor = (address) ->
+
+    return '#9' + address.slice(-5)
+
 ContractMixin =
 
     renderField: (f) ->
