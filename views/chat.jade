@@ -1,0 +1,21 @@
+extends base
+
+block content
+    .content
+        .page.chat-page
+            .narrow
+                h3.headline #{chat_slug}
+
+                #insert
+                    #logs.logs
+                        .log
+                            | initializing #{chat_slug}...
+
+                #block_counter
+
+        if chat_slug
+            script.
+                window.chat_slug = "#{chat_slug}"
+
+        script(src='/socket.io/socket.io.js')
+        script(src='/js/chat.js')

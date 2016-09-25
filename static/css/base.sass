@@ -1,0 +1,158 @@
+$fonts
+    small: 12px
+    default: 14px
+    medium: 16px
+    big: 20px
+
+$padding
+    tiny: 4px
+    small: 10px
+    default: 25px
+    medium: 40px
+    big: 55px
+    huge: 70px
+
+$colors
+    dark_gray: #555
+    medium_gray: #858585
+    light_gray: #ccc
+    lighter_gray: #e2e2e2
+    lightest_gray: #f8f8f8
+    tags: #f1f1f1
+    brand_color: #644fc7
+    green: #00c090
+    error_red: #ea7474
+    error: red
+    warning: yellow
+*
+    margin: 0
+    padding: 0
+    box-sizing: border-box
+
+html, body
+    height: 100%
+
+body
+    display:block
+    position: relative
+    font: 14px/16px Roboto
+    color: #444
+    font-weight: 400
+    background: #f2f2f2
+a
+    color: $colors.brand_color
+    cursor: pointer
+
+.content
+    padding: $padding.default
+
+.narrow
+    max-width: 800px
+    margin: 0 auto
+
+.catchphrase
+    margin-top: -4px
+    margin-bottom: $padding.small
+    color: $colors.light_gray
+    font-weight: bold
+
+h3
+    font-weight: 500
+    font-size: $fonts.medium
+    margin-bottom: $padding.default
+
+.loading
+    padding: $padding.default
+
+.right
+    float: right
+
+#app
+    padding: $padding.default
+    padding-top: 0px
+
+#header
+    padding: $padding.default
+    h1
+        color: $colors.brand_color
+        margin-bottom: $padding.small
+        text-shadow: 0px 1px $colors.light_gray
+        a
+            text-decoration: none
+
+    a
+        padding-right: $padding.default
+
+    .links
+        text-decoration: underline
+
+.headline
+    color: $colors.brand_color
+    font-size: 24px
+    margin: $padding.default 0
+
+.chat-page
+    .headline
+        margin: 0 0 $padding.default 0
+
+.logs
+    height: 500px
+    overflow-y: scroll
+    padding: $padding.default
+    margin-bottom: $padding.big
+    background: #ddd
+
+    .log
+        margin-bottom: $padding.small
+
+        .tag
+            display: inline-block
+            font-weight: bold
+            color: $colors.brand_color
+            margin-right: $padding.small
+
+            &.error
+                color: $colors.error
+            &.warning
+                color: $colors.warning
+
+        .message, .address
+            display: inline-block
+
+        .metadata
+            display: block
+            color: $colors.medium_gray
+            padding-top: $padding.tiny
+
+        .timestamp
+            color: $colors.medium_gray
+            display: inline-block
+            margin-right: $padding.tiny
+            a
+                text-decoration: none
+
+#footer
+    bottom: 0px
+    left: 0px
+    right: 0px
+    padding: $padding.default
+
+    .links
+        width: 100%
+        padding: $padding.default
+        text-align: right
+        a
+            display: block
+            margin-left: $padding.default
+
+.blurbs
+    font-size: 14px
+    max-width: 600px
+
+    p
+        line-height: 22px
+
+    .chunk
+        margin-bottom: $padding.default
+
+@import 'docs.sass'

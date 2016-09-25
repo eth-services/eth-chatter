@@ -1,0 +1,43 @@
+doctype html
+html
+    head
+        title
+            block title
+                | eth chatter - eternal threaded chat on ethereum
+
+        meta(name="apple-mobile-web-app-capable", content="yes")
+        meta(name="mobile-web-app-capable", content="yes")
+        meta(name="HandheldFriendly", content="True")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no")
+        link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css')
+        meta(name="apple-mobile-web-app-status-bar-style", content="black-translucent")
+        link(rel="icon" type="image/png" href="/img/favicon-32x32.png" sizes="32x32")
+
+
+        link(href='http://fonts.googleapis.com/css?family=Roboto:400,700', rel='stylesheet', type='text/css')
+        link(rel='stylesheet', href='/css/base.css')
+
+    body
+        #header
+            .narrow
+                h1
+                    a(href='/'): code eth chatter
+
+                p.catchphrase eternal threaded chat on ethereum
+
+                .links
+                    a(href='/') What is this?
+                    a(href='/howto') How to
+            
+        block content
+
+        #footer
+            .links
+                a(href="http://eth-services.io") powered by ethereum services
+                a(href="http://prontotype.us") A Prontotype Project
+
+    script(src='/js/ga.js')
+    if CONTRACT_ADDRESS
+        script.
+            window.CONTRACT_ADDRESS = "#{CONTRACT_ADDRESS}"
+    block scripts
