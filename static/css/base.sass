@@ -99,11 +99,13 @@ h3
     height: 500px
     overflow-y: scroll
     padding: $padding.default
-    margin-bottom: $padding.big
     background: #ddd
+    position: relative
 
     .log
-        margin-bottom: 15px
+        margin-bottom: $padding.small
+        &:last-child
+            margin-bottom: 0px
 
         .tag
             display: inline-block
@@ -126,7 +128,6 @@ h3
 
         .message, .address
             display: inline-block
-            margin-bottom: $padding.tiny
 
         .address
             font-weight: bold
@@ -147,6 +148,13 @@ h3
             margin-right: $padding.tiny
             a
                 text-decoration: none
+
+.sender
+    display: block
+    padding: $padding.default
+    padding-top: 0px
+    background: #ddd
+    margin-bottom: $padding.big
 
 #footer
     bottom: 0px

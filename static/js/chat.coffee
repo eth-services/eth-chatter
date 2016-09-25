@@ -54,6 +54,7 @@ Room = React.createClass
         <div className='log-insert'>
             <div>
                 {@renderActivity()}
+                <a className='sender' href='/howto'>Send a message</a>
             </div>
             <div className='col half'>
                 <h3>Pending Transactions</h3>
@@ -107,7 +108,7 @@ somata.subscribe('eth-chatter:events', "rooms:#{window.chat_slug}:all_events").o
     Dispatcher.contract_logs$.setItems data
 
 somata.subscribe('ethereum:contracts', "all_blocks").onValue (data) ->
-    text = document.createTextNode("Block##{data.number}... ")
+    text = document.createTextNode("Block ##{data.number}... ")
     document.getElementById("block_counter").appendChild(text)
 
 ReactDOM.render(<Room />, document.getElementById('insert'))
