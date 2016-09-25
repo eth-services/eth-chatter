@@ -14,9 +14,9 @@ $padding
 
 $colors
     dark_gray: #555
-    medium_gray: #858585
+    medium_gray: #9a9a9a
     light_gray: #ccc
-    lighter_gray: #e2e2e2
+    lighter_gray: #d5d5d5
     lightest_gray: #f8f8f8
     tags: #f1f1f1
     brand_color: #644fc7
@@ -103,7 +103,7 @@ h3
     background: #ddd
 
     .log
-        margin-bottom: $padding.small
+        margin-bottom: 15px
 
         .tag
             display: inline-block
@@ -116,13 +116,30 @@ h3
             &.warning
                 color: $colors.warning
 
+        .before-message
+            display: inline-block
+            margin-right: 8px
+            color: black
+            font-weight: bold
+            font-size: 17px
+            position: relative
+
         .message, .address
             display: inline-block
+            margin-bottom: $padding.tiny
+
+        .address
+            font-weight: bold
 
         .metadata
-            display: block
+            display: inline-block
             color: $colors.medium_gray
             padding-top: $padding.tiny
+            margin-right: $padding.tiny
+            
+            a
+                color: $colors.medium_gray
+
 
         .timestamp
             color: $colors.medium_gray
