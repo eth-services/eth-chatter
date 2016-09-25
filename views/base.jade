@@ -42,4 +42,7 @@ html
     if CONTRACT_ADDRESS
         script.
             window.CONTRACT_ADDRESS = "#{CONTRACT_ADDRESS}"
+    if example_room_slug
+        script.
+            window.example_room_slug = "#{example_room_slug}"
     block scripts
