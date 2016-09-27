@@ -89,11 +89,6 @@ Room = React.createClass
 
 module.exports = Room
 
-# somata.subscribe('ethereum:contracts', "contracts:#{window.chat_slug}:pending_tx").onValue (data) ->
-#     if data?
-#         Dispatcher.pending_transactions$.updateItem data.hash, data
-#         window.block = data.blockNumber
-
 somata.subscribe('eth-chatter:events', "rooms:#{window.chat_slug}:events").onValue (data) ->
     data.id_hash = data.event.blockNumber + '-' + (data.event.logIndex + 1)
     if !data.event.logIndex?
