@@ -10,6 +10,15 @@ client = new somata.Client()
 
 {CONTRACT_ADDRESS} = config
 
+LoginService = client.bindRemote 'eth-login:events'
+usernames = []
+
+attachUsername = (_data) ->
+    console.log _data
+    if username = _.findWhere usernames, {address: _data.address}
+        _data.username = username.username
+    return _data
+
 # Start web3
 web3 = new Web3()
 web3.setProvider(new web3.providers.HttpProvider("http://#{config.eth_ip}:8545"))
@@ -50,18 +59,17 @@ subscribeRoom = (room_slug, cb) ->
     cb null, room_slug
 
 findRoomEvents = (room, cb) ->
-    console.log CONTRACT_ADDRESS
-    console.log room
+    console.log 'finding room events'
     filter = web3.eth.filter({fromBlock: 0, toBlock: 'latest', address: CONTRACT_ADDRESS})
 
     filter.get (err, result) ->
-        console.log 'these are the room events that i have found', result
-        console.log 'the room is', room
         async.map result, attachBlock, (err, result) ->
             data = result.map (r) ->
                 processEvent r
 
             data = data.filter (d) -> d.room == room
+            data = data.map (_d) -> attachUsername _d
+
             cb err, data
 
 checkContractEvents = (address, cb) ->
@@ -75,6 +83,10 @@ checkContractEvents = (address, cb) ->
                 processEvent r
             data = _.compact data
             console.log data.map (d) -> d.event.blockNumber + '-' + d.event.logIndex
+
+LoginService 'findUsernames', config._locals.login_address, (err, u) ->
+    console.log u
+    usernames = u
 
 service = new somata.Service 'eth-chatter:events', {
     checkContractEvents

@@ -69,14 +69,13 @@ Room = React.createClass
             {if @state.loading
                 <div className='loading'>loading...</div>
             else
-                <div>
-                    <div className='log'>
-                        eth-chatter.io <a href='http://github.com/eth-services/eth-chatter'>v0.0.1</a>
-                    </div>
-                    <div className='log'>
-                        furnished by <a href='http://eth-services.io'>eth-services.io</a>
-                    </div>
+                [<div className='log'>
+                    eth-chatter.io <a href='http://github.com/eth-services/eth-chatter'>v0.0.1</a>
                 </div>
+                ,
+                <div className='log'>
+                    furnished by <a href='http://eth-services.io'>eth-services.io</a>
+                </div>]
             }
             {@state.logs.map @renderLog}
         </div>
