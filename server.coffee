@@ -39,40 +39,11 @@ app.get '/', localsMiddleware, (req, res) ->
 app.get '/c/:chat_slug.json', (req, res) ->
     # TODO: get events filtered by chat_slug
     EventsService 'findRoomEvents', req.params.chat_slug, (err, events) ->
-        # events.map (d) ->
-        #     d.id_hash = d.event.blockNumber + '-' + d.event.logIndex
 
         res.json events
 
 app.get '/c/:chat_slug', localsMiddleware, (req, res) ->
-    # EventsService 'subscribeRoom', req.params.chat_slug, (err, resp) -> console.log err, resp
-    # subscribeContract contract_address
     {chat_slug} = req.params
     res.render 'chat', {chat_slug}
-
-session_key = (address) ->
-    "eth-chatter:active:contracts:#{address}"
-
-address_from_key = (session_key) ->
-    session_key.replace('eth-chatter:active:contracts:','')
-
-subscribeContract = (address) ->
-    key = session_key(address)
-    redis.set key, true, (err, resp) ->
-        redis.expire key, 10*60, (err, resp) ->
-
-checkActiveContracts = (done) ->
-    redis.keys "eth-chatter:active:contracts:*", (err, keys) ->
-        console.log err, keys
-        keys.map (k) ->
-            address = address_from_key k
-            EventsService 'checkContractEvents', address, (err, done) ->
-        done null, keys
-
-setInterval ->
-    checkActiveContracts (err, done) ->
-        console.log done
-        console.log 'done'
-, 2000
 
 app.start()
