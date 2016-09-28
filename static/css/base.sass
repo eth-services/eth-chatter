@@ -20,6 +20,7 @@ $colors
     lightest_gray: #f8f8f8
     tags: #f1f1f1
     brand_color: #644fc7
+    brand_color: #2c66c1
     green: #00c090
     error_red: #ea7474
     error: red
@@ -49,6 +50,10 @@ a
 .narrow
     max-width: 800px
     margin: 0 auto
+.cr
+    padding: $padding.default 0
+    display: block
+    color: $colors.brand_color
 
 .catchphrase
     margin-top: -4px
@@ -66,6 +71,9 @@ h3
 
 .right
     float: right
+    &.hard
+        padding: $padding.tiny $padding.default 0
+        clear: both
 
 #app
     padding: $padding.default
@@ -76,7 +84,7 @@ h3
     h1
         color: $colors.brand_color
         margin-bottom: $padding.small
-        text-shadow: 0px 1px $colors.light_gray
+        // text-shadow: 0px 1px $colors.light_gray
         a
             text-decoration: none
 

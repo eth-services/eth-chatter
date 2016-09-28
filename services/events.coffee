@@ -14,7 +14,6 @@ LoginService = client.bindRemote 'eth-login:events'
 usernames = []
 
 attachUsername = (_data) ->
-    console.log _data
     if username = _.findWhere usernames, {address: _data.address}
         _data.username = username.username
     return _data
@@ -45,6 +44,7 @@ subscribeAllRooms = ->
 
                 _data = processEvent result
                 async.map result, attachBlock, (err, result) ->
+                    _data = attachUsername _data
 
                     if _data?
                         console.log result, _data
@@ -87,6 +87,14 @@ checkContractEvents = (address, cb) ->
 LoginService 'findUsernames', config._locals.login_address, (err, u) ->
     console.log u
     usernames = u
+
+client.on "eth-login:events", "contracts:#{config._locals.login_address}:all_usernames", (data) ->
+    console.log 'yes?', data
+    {address, username} = data
+    if address? && username?
+        usernames = usernames.filter (u_a) -> u_a.address != address
+        usernames.push {address, username}
+        service.publish "all_usernames", {address, username}
 
 service = new somata.Service 'eth-chatter:events', {
     checkContractEvents

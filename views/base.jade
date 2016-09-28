@@ -19,25 +19,14 @@ html
 
     body
         #header
-            .narrow
-                h1
-                    a(href='/'): code eth chatter
-
-                p.catchphrase eternal threaded chat on ethereum
-
-                code.right chat @ #{CONTRACT_ADDRESS}
-                code.right log in @ #{login_address}
-
-                .links
-                    a(href='/') What is this?
-                    a(href='/howto') How to
+            block header
+                include ./header
             
         block content
 
         #footer
-            .links
-                a(href="http://eth-services.io") powered by ethereum services
-                a(href="http://prontotype.us") A Prontotype Project
+            block footer
+                include ./footer
 
     script(src='/js/ga.js')
     if CONTRACT_ADDRESS

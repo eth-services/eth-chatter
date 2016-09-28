@@ -1,5 +1,7 @@
 extends base
-
+block header
+    .narrow
+        include ./header
 block content
     .content
         .page.home-page
@@ -18,3 +20,7 @@ block content
                 //- .blurbs
                 //-     .chunk
                 //-         p Or check out some <a href='/recipes'>recipes</a> to get some ideas of how to use this.
+
+block footer
+    .narrow
+        include ./footer

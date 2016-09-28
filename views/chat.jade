@@ -3,15 +3,14 @@ extends base
 block content
     .content
         .page.chat-page
-            .narrow
-                h3.headline #{chat_slug}
+            h3.headline #{chat_slug}
 
-                #insert
-                    #logs.logs
-                        .log
-                            | initializing #{chat_slug}...
+            #insert
+                #logs.logs
+                    .log
+                        | initializing #{chat_slug}...
 
-                #block_counter
+            #block_counter
 
         if chat_slug
             script.

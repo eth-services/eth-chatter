@@ -4,6 +4,7 @@ moment = require 'moment'
 
 {Txid, ContractMixin, LogItem} = require './common'
 KefirCollection = require 'kefir-collection'
+KefirBus = require 'kefir-bus'
 fetch$ = require 'kefir-fetch'
 
 somata = require './somata-stream'
@@ -13,6 +14,7 @@ Dispatcher =
         fetch$ 'get', "/c/#{slug}.json"
     pending_transactions$: KefirCollection([], id_key: 'hash')
     contract_logs$: KefirCollection([], id_key: 'id_hash')
+    new_username$: KefirBus()
 
 
 Room = React.createClass
@@ -31,11 +33,14 @@ Room = React.createClass
         @transactions$.onValue @setTransactions
         @logs$ = Dispatcher.contract_logs$
         @logs$.onValue @handleLogs
+        @usernames$ = Dispatcher.new_username$
+        @usernames$.onValue @handleNewUsername
 
     componentWillUnmount: ->
         @contract$.offValue @foundContract
         @transactions$.offValue @setTransactions
         @logs$.offValue @handleNewLog
+        @usernames$.offValue @handleNewUsername
 
     setTransactions: (transactions) ->
         @setState {transactions}
@@ -48,6 +53,14 @@ Room = React.createClass
     handleLogs: (logs) ->
         @setState {logs}, =>
             @fixScroll()
+
+    handleNewUsername: ({username, address}) ->
+        logs = @state.logs
+        new_logs = logs.map (l) ->
+            if l.address == address
+                l.username = username
+            return l
+        @setState logs: new_logs
 
     render: ->
         console.log @state
@@ -104,6 +117,12 @@ somata.subscribe('eth-chatter:events', "rooms:#{window.chat_slug}:all_events").o
 somata.subscribe('ethereum:contracts', "all_blocks").onValue (data) ->
     text = document.createTextNode("Block ##{data.number}... ")
     document.getElementById("block_counter").appendChild(text)
+
+somata.subscribe('eth-chatter:events', "all_usernames").onValue (data) ->
+    console.log '[eth-login:events -- all_usernames -- BAD MAN', data
+    # SOmething like this
+    # Dispatcher.all_usernames$.updateItem data.address, data
+    Dispatcher.new_username$.emit data
 
 ReactDOM.render(<Room />, document.getElementById('insert'))
 
