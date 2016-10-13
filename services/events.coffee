@@ -84,11 +84,11 @@ checkContractEvents = (address, cb) ->
             data = _.compact data
             console.log data.map (d) -> d.event.blockNumber + '-' + d.event.logIndex
 
-LoginService 'findUsernames', config._locals.login_address, (err, u) ->
+LoginService 'findUsernames', config.login_store, (err, u) ->
     console.log u
     usernames = u
 
-client.on "eth-login:events", "contracts:#{config._locals.login_address}:all_usernames", (data) ->
+client.on "eth-login:events", "contracts:#{config.login_store}:all_usernames", (data) ->
     console.log 'yes?', data
     {address, username} = data
     if address? && username?
