@@ -7,7 +7,11 @@ KefirCollection = require 'kefir-collection'
 KefirBus = require 'kefir-bus'
 fetch$ = require 'kefir-fetch'
 
-somata = require './somata-stream'
+somata = require 'somata-socketio-client'
+eve = require 'eve-js'
+threaded_chat_abi = require './threaded-chat-abi'
+
+chat_api = eve.buildAPIWithABI threaded_chat_abi
 
 Dispatcher =
     getRoomLogs: (slug) ->
@@ -25,6 +29,7 @@ Room = React.createClass
         loading: true
         transactions: []
         block_number: null
+        message: ''
 
     componentDidMount: ->
         @logs$ = Dispatcher.getRoomLogs(window.chat_slug)
@@ -46,13 +51,40 @@ Room = React.createClass
         @setState {transactions}
 
     foundLogs: (logs) ->
-        logs.map (l) -> l.id_hash = l.event.blockNumber + '-' + l.logIndex
+        console.log logs
+        logs.map (l) -> l.id_hash = l.blockNumber + '-' + l.logIndex
         @setState loading: false
         Dispatcher.contract_logs$.setItems logs
 
     handleLogs: (logs) ->
+        console.log logs, 'New log'
         @setState {logs}, =>
             @fixScroll()
+
+    changeValue: (key, e) ->
+        new_state = {}
+        new_state[key] = e.target.value
+        @setState new_state
+
+    onKeyPress: (e) ->
+        if e.key == 'Enter' and !e.shiftKey
+            e.preventDefault()
+            @onSubmit(e)
+
+    onSubmit: (e) ->
+        e.preventDefault()
+        if !@state.message?.trim().length
+            return
+        {message} = @state
+        to = CONTRACT_ADDRESS
+        fn = 'sendChat'
+        room = window.location.pathname.split('/')[2]
+        options = {gas: 30000}
+        chat_api.sendChat to, room, message, options, @handleWeb3Response
+        # eve.execWithABI threaded_chat_abi, to, fn, room, message, options, @handleWeb3Response
+
+    handleWeb3Response: (resp) ->
+        console.log resp
 
     handleNewUsername: ({username, address}) ->
         logs = @state.logs
@@ -64,10 +96,16 @@ Room = React.createClass
 
     render: ->
         console.log @state
+        # <a className='sender' href='/howto'>Send a message</a>
         <div className='log-insert'>
             <div>
                 {@renderActivity()}
-                <a className='sender' href='/howto'>Send a message</a>
+                <input
+                    value=@state.message
+                    placeholder='Send a message'
+                    onKeyPress=@onKeyPress
+                    onChange={@changeValue.bind(null, 'message')}
+                />
             </div>
             <div className='col half'>
                 <h3>Pending Transactions</h3>
@@ -101,24 +139,26 @@ Room = React.createClass
         $logs?.scrollTop = $logs?.scrollHeight
 
 module.exports = Room
-
-somata.subscribe('eth-chatter:events', "rooms:#{window.chat_slug}:events").onValue (data) ->
-    data.id_hash = data.event.blockNumber + '-' + (data.event.logIndex + 1)
-    if !data.event.logIndex?
-        console.log 'Its broken:', data.event.blockNumber + '-' + (data.event.logIndex + 1)
+console.log "rooms:#{window.chat_slug}:events"
+somata.subscribe 'eth-chatter:events', "rooms:#{window.chat_slug}:events", (data) ->
+    console.log 'test jones ii', data
+    data.id_hash = data.blockNumber + '-' + (data.logIndex + 1)
+    if !data.logIndex?
+        console.log 'Its broken:', data.blockNumber + '-' + (data.logIndex + 1)
     Dispatcher.contract_logs$.updateItem data.id_hash, data
 
-somata.subscribe('eth-chatter:events', "rooms:#{window.chat_slug}:all_events").onValue (data) ->
+somata.subscribe 'eth-chatter:events', "rooms:#{window.chat_slug}:all_events", (data) ->
+    console.log 'test jones', data
     data = data.map (d) ->
-        d.id_hash = d.event.blockNumber + '-' + (d.event.logIndex + 1)
+        d.id_hash = d.blockNumber + '-' + (d.logIndex + 1)
         return d
     Dispatcher.contract_logs$.setItems data
 
-somata.subscribe('ethereum:contracts', "all_blocks").onValue (data) ->
+somata.subscribe 'ethereum:contracts', "all_blocks", (data) ->
     text = document.createTextNode("Block ##{data.number}... ")
     document.getElementById("block_counter").appendChild(text)
 
-somata.subscribe('eth-chatter:events', "all_usernames").onValue (data) ->
+somata.subscribe 'eth-chatter:events', "all_usernames", (data) ->
     console.log '[eth-login:events -- all_usernames -- BAD MAN', data
     # SOmething like this
     # Dispatcher.all_usernames$.updateItem data.address, data

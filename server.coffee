@@ -11,8 +11,8 @@ config = require './config'
 {CONTRACT_ADDRESS} = config
 
 client = new somata.Client()
-ContractsService = client.bindRemote 'ethereum:contracts'
-EventsService = client.bindRemote 'eth-chatter:events'
+ContractsService = client.remote.bind client, 'ethereum:contracts'
+EventsService = client.remote.bind client, 'eth-chatter:events'
 
 localsMiddleware = (req, res, next) ->
     Object.keys(config._locals).map (_l) ->

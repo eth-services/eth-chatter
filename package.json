@@ -16,11 +16,14 @@
         "dapp"
     ],
     "dependencies": {
+        "eve-js": "0.0.2",
+        "eve-node": "0.0.7",
         "kefir-collection": "0.1.x",
         "kefir-fetch": "0.1.x",
-		"qs": "*",
-		"redis": "0.2.x",
-		"somata": "0.1.x",
-		"somata-socketio": "0.0.8"
+        "qs": "*",
+        "redis": "0.2.x",
+        "somata": "0.2.x",
+        "somata-socketio": "0.0.x",
+        "somata-socketio-client": "git+ssh://git@github.com:somata/somata-socketio-client.git"
     }
 }

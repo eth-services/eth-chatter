@@ -60,13 +60,13 @@ LogItem = React.createClass
         <div className='log' key=l.address >
             {if l.kind then <div className="tag #{l.kind}">{l.kind}</div>}
             <div className='metadata'>
-                <a href="http://etherscan.io/tx/#{l.event.transactionHash}" target="_newtab"><div className='timestamp'>{moment(l.event.block.timestamp*1000).format('HH:mm:ss')}</div></a>
+                <a href="http://etherscan.io/tx/#{l.transactionHash}" target="_newtab"><div className='timestamp'>{moment(l.block.timestamp*1000).format('HH:mm:ss')}</div></a>
                 {if l.username
                     <a className='address' style={_style} title="#{l.address}" target="_newtab" href="http://etherscan.io/address/etherscan.io/address/#{l.address}"><div className='address'>{'<' + l.username + '> '}</div></a>
                 else
                     if l.address then <a className='address' style={_style} title="#{l.address}" target="_newtab" href="http://etherscan.io/address/etherscan.io/address/#{l.address}"><div className='address'>{'<...' + l.address.slice(-10) + '> :'}</div></a>}
             </div>
-            <div className='message'>{l.message}</div>
+            <div className='message'>{l.decoded.message}</div>
         </div>
             # <div className='before-message'><i className='fa fa-angle-right' /></div>
 
