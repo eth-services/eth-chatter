@@ -95,17 +95,19 @@ Room = React.createClass
         @setState logs: new_logs
 
     render: ->
-        console.log @state
-        # <a className='sender' href='/howto'>Send a message</a>
         <div className='log-insert'>
             <div>
                 {@renderActivity()}
-                <input
-                    value=@state.message
-                    placeholder='Send a message'
-                    onKeyPress=@onKeyPress
-                    onChange={@changeValue.bind(null, 'message')}
-                />
+                {if window.web3?
+                    <input
+                        value=@state.message
+                        placeholder='Send a message'
+                        onKeyPress=@onKeyPress
+                        onChange={@changeValue.bind(null, 'message')}
+                    />
+                else
+                    <a className='sender' href='/howto'>Send a message</a>
+                }
             </div>
             <div className='col half'>
                 <h3>Pending Transactions</h3>

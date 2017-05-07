@@ -9,12 +9,13 @@ eve = require('eve-node')({eth_addresses: config.eth_addresses})
 GenericEve = eve.buildGenericMethods {ThreadedChat: require './threaded-chat'}
 {sendTransaction, deploy, getParameter, callFunction, compileContractData, decodeEvent, abis} = GenericEve
 
-
 client = new somata.Client()
 
 {CONTRACT_ADDRESS} = config
 
 LoginService = client.remote.bind client, 'eth-login:contracts'
+DataService = client.remote.bind client, 'eth-services:data'
+
 usernames = []
 
 # Start web3
@@ -49,22 +50,37 @@ subscribeRoom = (room_slug, cb) ->
     console.log 'TODO: subscribe room_slug', room_slug
     cb null, room_slug
 
+hydrateEvents = (events, cb) ->
+    async.map events, attachBlock, (err, events) ->
+        data = events.map (e) ->
+            e.decoded = decodeEvent 'ThreadedChat', e
+            return e
+        data = data.map (_d) -> attachUsername _d
+        cb err, data
+
 findRoomEvents = (room, cb) ->
     console.log 'finding room events'
 
-    filter = web3.eth.filter({fromBlock: 0, toBlock: 'latest', address: CONTRACT_ADDRESS})
+    # filter = web3.eth.filter({fromBlock: 0, toBlock: 'latest', address: CONTRACT_ADDRESS})
 
-    filter.get (err, events) ->
-        async.map events, attachBlock, (err, events) ->
-            console.log events
-            data = events.map (e) ->
-                e.decoded = decodeEvent 'ThreadedChat', e
-                return e
+    # filter.get (err, events) ->
+    #     hydrateEvents events, (err, events) ->
+    #         events = events.filter (e) -> e.decoded.room == room
+    #         console.log 'the call back'
+    #         cb err, events
 
-            data = data.filter (d) -> d.decoded.room == room
-            data = data.map (_d) -> attachUsername _d
-
-            cb err, data
+    console.log 'ill try to load it locally'
+    DataService 'find', 'transactions', {to: CONTRACT_ADDRESS}, (err, transactions) ->
+        console.log 'transactions', transactions
+        events = _.flatten transactions.items.map((t) -> t.logs)
+        console.log events
+        hydrateEvents events, (err, events) ->
+            events = events.filter (e) -> e.decoded.room == room
+            console.log 'the call back'
+            cb err, events
+        # if contract?.length
+        #     DataService 'find', 'transactions', {to: CONTRACT_ADDRESS}, (err, transactions) ->
+        #         console.log err, transactions
 
 # eth-login implementation
 # -----------------------------------------------------------------------------
