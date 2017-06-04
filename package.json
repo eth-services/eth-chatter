@@ -6,6 +6,9 @@
         "type": "git",
         "url": "http://github.com/brynwaldwick/eth-chatter.git"
     },
+    "scripts": {
+        "bounce": "metaserve --bounce /static/js/chat.js && metaserve --bounce /static/css/base.css"
+    },
     "author": {
         "name": "Prontotype",
         "url": "http://prontotype.us/"
@@ -20,6 +23,7 @@
         "eve-node": "0.0.7",
         "kefir-collection": "0.1.x",
         "kefir-fetch": "0.1.x",
+        "polar": "0.3.x",
         "qs": "*",
         "redis": "0.2.x",
         "somata": "0.2.x",
