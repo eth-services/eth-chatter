@@ -56,7 +56,6 @@ LogItem = React.createClass
         {l} = @props
         _color = stringToColor(l.address)
         _style = {color: '#' + '9' + _color.slice(-5)}
-        console.log _color, _style
         <div className='log' key=l.address >
             {if l.kind then <div className="tag #{l.kind}">{l.kind}</div>}
             <div className='metadata'>

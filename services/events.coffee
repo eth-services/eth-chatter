@@ -44,6 +44,11 @@ subscribeAllRooms = ->
                     console.log "rooms:#{_data.decoded.room}:events"
                     service.publish "rooms:#{_data.decoded.room}:events", _data
 
+
+            web3.eth.getTransactionReceipt result.transactionHash, (err, tx) ->
+                DataService 'create', 'transactions', tx, (err, created) ->
+                    console.log 'created transaction', created
+
 subscribeAllRooms()
 
 subscribeRoom = (room_slug, cb) ->
@@ -59,48 +64,30 @@ hydrateEvents = (events, cb) ->
         cb err, data
 
 findRoomEvents = (room, cb) ->
-    console.log 'finding room events'
-
-    # filter = web3.eth.filter({fromBlock: 0, toBlock: 'latest', address: CONTRACT_ADDRESS})
-
-    # filter.get (err, events) ->
-    #     hydrateEvents events, (err, events) ->
-    #         events = events.filter (e) -> e.decoded.room == room
-    #         console.log 'the call back'
-    #         cb err, events
-
-    console.log 'ill try to load it locally'
     DataService 'find', 'transactions', {to: CONTRACT_ADDRESS}, (err, transactions) ->
-        console.log 'transactions', transactions
         events = _.flatten transactions.items.map((t) -> t.logs)
-        console.log events
         hydrateEvents events, (err, events) ->
             events = events.filter (e) -> e.decoded.room == room
-            console.log 'the call back'
             cb err, events
-        # if contract?.length
-        #     DataService 'find', 'transactions', {to: CONTRACT_ADDRESS}, (err, transactions) ->
-        #         console.log err, transactions
 
-# eth-login implementation
-# -----------------------------------------------------------------------------
+# # eth-login implementation
+# # -----------------------------------------------------------------------------
 
 attachUsername = (_data) ->
     if username = _.findWhere usernames, {address: _data.address}
         _data.username = username.username
     return _data
 
-LoginService 'findUsernames', config.login_store, (err, u) ->
-    console.log u
-    usernames = u
+# LoginService 'findUsernames', config.login_store, (err, u) ->
+#     usernames = u
 
-client.subscribe "eth-login:contracts", "contracts:#{config.login_store}:all_usernames", (data) ->
-    console.log 'A user logged in', data
-    {address, username} = data
-    if address? && username?
-        usernames = usernames.filter (u_a) -> u_a.address != address
-        usernames.push {address, username}
-        service.publish "all_usernames", {address, username}
+# client.subscribe "eth-login:contracts", "contracts:#{config.login_store}:all_usernames", (data) ->
+#     console.log 'A user logged in', data
+#     {address, username} = data
+#     if address? && username?
+#         usernames = usernames.filter (u_a) -> u_a.address != address
+#         usernames.push {address, username}
+#         service.publish "all_usernames", {address, username}
 
 service = new somata.Service 'eth-chatter:events', {
     subscribeRoom

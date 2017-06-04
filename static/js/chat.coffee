@@ -83,8 +83,10 @@ Room = React.createClass
         chat_api.sendChat to, room, message, options, @handleWeb3Response
         # eve.execWithABI threaded_chat_abi, to, fn, room, message, options, @handleWeb3Response
 
-    handleWeb3Response: (resp) ->
-        console.log resp
+    handleWeb3Response: (err, resp) ->
+        console.log err if err?
+        if resp?
+            @setState message: ''
 
     handleNewUsername: ({username, address}) ->
         logs = @state.logs
@@ -109,13 +111,13 @@ Room = React.createClass
                     <a className='sender' href='/howto'>Send a message</a>
                 }
             </div>
-            <div className='col half'>
-                <h3>Pending Transactions</h3>
-                {@state.transactions.map (t, i) ->
-                    <div><Txid txid={t.hash} key=i /></div>
-                }
-            </div>
         </div>
+            # <div className='col half'>
+            #     <h3>Pending Transactions</h3>
+            #     {@state.transactions.map (t, i) ->
+            #         <div><Txid txid={t.hash} key=i /></div>
+            #     }
+            # </div>
 
     renderActivity: ->
         <div className='logs' id='logs'>
