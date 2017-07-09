@@ -64,8 +64,9 @@ hydrateEvents = (events, cb) ->
         cb err, data
 
 findRoomEvents = (room, cb) ->
-    DataService 'find', 'transactions', {to: CONTRACT_ADDRESS}, (err, transactions) ->
-        events = _.flatten transactions.items.map((t) -> t.logs)
+    # TODO: eventually search by decoded data
+    DataService 'find', 'transactions', {to: CONTRACT_ADDRESS}, {}, {all: true}, (err, transactions) ->
+        events = _.flatten transactions.map((t) -> t.logs)
         hydrateEvents events, (err, events) ->
             events = events.filter (e) -> e.decoded.room == room
             cb err, events
